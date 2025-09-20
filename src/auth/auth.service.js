@@ -3,6 +3,7 @@ const { create, getAll } = require('../database/queries/crud')
 const { existsByColumn, findByColumn } = require('../database/queries/others')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const tokenBlacklist = require('../utils/tokenBlacklist')
 
 const JWT_SECRET = process.env.JWT_SECRET; 
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
@@ -77,8 +78,16 @@ async function getAllUsers(){
     return await getAll('users')
 }
 
+async function logout(token) {
+  if (!token) {
+    throw new Error('Token is required');
+  }
+  tokenBlacklist.add(token);
+}
+
 module.exports = {
     login, 
+    logout,
     register,
-    getAllUsers
+    getAllUsers,
 }

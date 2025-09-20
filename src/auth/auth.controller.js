@@ -19,6 +19,21 @@ async function login(req, res) {
     }
 }
 
+async function logout(req, res) {
+  try {
+    const token = req.headers['authorization']?.split(' ')[1];
+    if (!token) {
+      return res.status(400).json({ error: 'Token required' });
+    }
+
+    await authService.logout(token);
+
+    res.json({ message: 'Logged out successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
 async function listUsers(req, res) {
     try {
         const users = await authService.getAllUsers();
@@ -32,5 +47,6 @@ async function listUsers(req, res) {
 module.exports = {
     register, 
     login,
+    logout,
     listUsers
 }
