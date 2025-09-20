@@ -7,7 +7,8 @@ const {
     updateService,
     deleteService} = require('../services/service.controller') 
 
-router.post('/', createService)                
+router.post('/', createService)          
+router.get('/', listServices)            
 router.get('/:id', showService)          
 router.put('/:id', updateService)        
 router.delete('/:id', deleteService)     
