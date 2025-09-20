@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.post('/register', authController.register)
 router.post('/login', authController.login)
-router.post('/users', authController.listUsers)
+router.get('/users', authController.listUsers)
 
 router.get('/profile', authenticateToken, (req, res) => {
     res.json({ user: req.user })

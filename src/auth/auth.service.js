@@ -1,7 +1,11 @@
+require('dotenv').config();
 const { create, getAll } = require('../database/queries/crud')
 const { existsByColumn, findByColumn } = require('../database/queries/others')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+
+const JWT_SECRET = process.env.JWT_SECRET; 
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
 
 async function verifyPassword(plainPassword, hashedPassword) {
   return await bcrypt.compare(plainPassword, hashedPassword);

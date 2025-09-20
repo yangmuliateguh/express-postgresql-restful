@@ -1,4 +1,8 @@
 const bcrypt = require('bcrypt') 
+const jwt = require('jsonwebtoken')
+
+const JWT_SECRET = process.env.JWT_SECRET; 
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
 
 function getTokenFromHeader(req) {
   const authHeader = req.headers['authorization']
@@ -7,17 +11,23 @@ function getTokenFromHeader(req) {
 }
 
 function authenticateToken(req, res, next) {
-  const token = getTokenFromHeader(req)
+  const token = getTokenFromHeader(req);
+  console.log('=== AUTH DEBUG ===');
+  console.log('Authorization Header:', req.headers['authorization']);
+  console.log('Extracted Token:', token);
+  console.log('==================');
+
   if (!token) {
-    return res.status(401).json({ error: 'Token required' })
+    return res.status(401).json({ error: 'Token required' });
   }
 
   try {
-    const user = jwt.verify(token, JWT_SECRET)
-    req.user = user 
-    next()
+    const user = jwt.verify(token, JWT_SECRET);
+    req.user = user;
+    next();
   } catch (err) {
-    res.status(403).json({ error: 'Invalid or expired token' })
+    console.error('JWT Verify Error:', err.message);
+    res.status(403).json({ error: 'Invalid or expired token' });
   }
 }
 
